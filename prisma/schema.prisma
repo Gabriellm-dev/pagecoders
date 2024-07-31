@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  cpf           String  @id
+  email         String  @unique
+  senha         String
+  data_cadastro DateTime @default(now())
+  nome          String
+  rua           String?
+  numero        Int?
+  bairro        String?
+  cidade        String?
+  estado        String?
+  cep           String?
+  Livros        Livro[]
+  Emprestimos   Emprestimo[]
+  Avaliacoes    ClassificacaoUsuario[]
+}
+
+model Livro {
+  codigo           Int       @id @default(autoincrement())
+  fk_usuario_cpf   String
+  nome             String
+  editora          String?
+  data_publicacao  DateTime?
+  num_edicao       Int?
+  autor_es         String?
+  genero           String?
+  disponivel       Boolean  @default(true)
+  Usuario          Usuario  @relation(fields: [fk_usuario_cpf], references: [cpf])
+  Emprestimos      Emprestimo[]
+}
+
+model Emprestimo {
+  id_emprestimo             Int       @id @default(autoincrement())
+  fk_usuario_cpf            String
+  fk_livro_codigo           Int
+  data_emprestimo           DateTime  @default(now())
+  data_prevista_devolucao   DateTime?
+  data_devolucao            DateTime?
+  emprestimo_autorizado     Boolean   @default(false)
+  emprestimo_solicitado     Boolean   @default(true)
+  Usuario                   Usuario   @relation(fields: [fk_usuario_cpf], references: [cpf])
+  Livro                     Livro     @relation(fields: [fk_livro_codigo], references: [codigo])
+  Avaliacoes                AvaliacaoEmprestimo[]
+}
+
+model AvaliacaoEmprestimo {
+  cod_avaliacao     Int     @id @default(autoincrement())
+  fk_emprestimo_id  Int
+  classif_livro     Int
+  classif_usuario   Int
+  comentario        String?
+  Emprestimo        Emprestimo  @relation(fields: [fk_emprestimo_id], references: [id_emprestimo])
+  Classificacoes    ClassificacaoUsuario[]
+}
+
+model ClassificacaoUsuario {
+  fk_usuario_cpf  String
+  fk_avaliacao_cod  Int
+  Usuario         Usuario   @relation(fields: [fk_usuario_cpf], references: [cpf])
+  Avaliacao       AvaliacaoEmprestimo  @relation(fields: [fk_avaliacao_cod], references: [cod_avaliacao])
+
+  @@id([fk_usuario_cpf, fk_avaliacao_cod])
+}
