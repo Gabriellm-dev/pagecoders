@@ -1,23 +1,18 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const prisma = require('./prismaClient');
-const authRoutes = require('./routes/authRoutes');
-const livroRoutes = require('./routes/livroRoutes');
+const app = express();
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const livroRoutes = require('./routes/livroRoutes');
+const emprestimoRoutes = require('./routes/emprestimoRoutes');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
-const app = express();
-
 app.use(express.json());
 
-// Middleware
-app.use('/auth', authRoutes);
+app.use('/auth', usuarioRoutes);
 app.use('/livros', livroRoutes);
-app.use('/usuarios', usuarioRoutes);
+app.use('/emprestimos', emprestimoRoutes);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });

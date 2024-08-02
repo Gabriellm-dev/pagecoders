@@ -8,65 +8,65 @@ generator client {
 }
 
 model Usuario {
-  cpf           String  @id
-  email         String  @unique
-  senha         String
-  data_cadastro DateTime @default(now())
-  nome          String
-  rua           String?
-  numero        Int?
-  bairro        String?
-  cidade        String?
-  estado        String?
-  cep           String?
-  Livros        Livro[]
-  Emprestimos   Emprestimo[]
-  Avaliacoes    ClassificacaoUsuario[]
+  cpf              String   @id
+  email            String   @unique
+  senha            String
+  dataCadastro     DateTime @default(now())
+  nome             String
+  rua              String?
+  numero           Int?
+  bairro           String?
+  cidade           String?
+  estado           String?
+  cep              String?
+  livros           Livro[]
+  emprestimos      Emprestimo[]
+  classificacoes   ClassificacaoUsuario[]
 }
 
 model Livro {
-  codigo           Int       @id @default(autoincrement())
-  fk_usuario_cpf   String
-  nome             String
-  editora          String?
-  data_publicacao  DateTime?
-  num_edicao       Int?
-  autor_es         String?
-  genero           String?
-  disponivel       Boolean  @default(true)
-  Usuario          Usuario  @relation(fields: [fk_usuario_cpf], references: [cpf])
-  Emprestimos      Emprestimo[]
+  codigo            Int         @id @default(autoincrement())
+  fkUsuarioCpf      String
+  nome              String
+  editora           String?
+  dataPublicacao    DateTime?
+  numEdicao         Int?
+  autorEs           String?
+  genero            String?
+  disponivel        Boolean     @default(true)
+  usuario           Usuario     @relation(fields: [fkUsuarioCpf], references: [cpf])
+  emprestimos       Emprestimo[]
 }
 
 model Emprestimo {
-  id_emprestimo             Int       @id @default(autoincrement())
-  fk_usuario_cpf            String
-  fk_livro_codigo           Int
-  data_emprestimo           DateTime  @default(now())
-  data_prevista_devolucao   DateTime?
-  data_devolucao            DateTime?
-  emprestimo_autorizado     Boolean   @default(false)
-  emprestimo_solicitado     Boolean   @default(true)
-  Usuario                   Usuario   @relation(fields: [fk_usuario_cpf], references: [cpf])
-  Livro                     Livro     @relation(fields: [fk_livro_codigo], references: [codigo])
-  Avaliacoes                AvaliacaoEmprestimo[]
+  idEmprestimo          Int       @id @default(autoincrement())
+  fkUsuarioCpf          String
+  fkLivroCodigo         Int
+  dataEmprestimo        DateTime  @default(now())
+  dataPrevistaDevolucao DateTime?
+  dataDevolucao         DateTime?
+  emprestimoAutorizado  Boolean   @default(false)
+  emprestimoSolicitado  Boolean   @default(true)
+  usuario               Usuario   @relation(fields: [fkUsuarioCpf], references: [cpf])
+  livro                 Livro     @relation(fields: [fkLivroCodigo], references: [codigo])
+  avaliacaoEmprestimos  AvaliacaoEmprestimo[]
 }
 
 model AvaliacaoEmprestimo {
-  cod_avaliacao     Int     @id @default(autoincrement())
-  fk_emprestimo_id  Int
-  classif_livro     Int
-  classif_usuario   Int
-  comentario        String?
-  Emprestimo        Emprestimo  @relation(fields: [fk_emprestimo_id], references: [id_emprestimo])
-  Classificacoes    ClassificacaoUsuario[]
+  codAvaliacao   Int     @id @default(autoincrement())
+  fkEmprestimoId Int
+  classifLivro   Int?
+  classifUsuario Int?
+  comentario     String?
+  emprestimo     Emprestimo @relation(fields: [fkEmprestimoId], references: [idEmprestimo])
+  classificacoes ClassificacaoUsuario[]
 }
 
 model ClassificacaoUsuario {
-  fk_usuario_cpf  String
-  fk_avaliacao_cod  Int
-  Usuario         Usuario   @relation(fields: [fk_usuario_cpf], references: [cpf])
-  Avaliacao       AvaliacaoEmprestimo  @relation(fields: [fk_avaliacao_cod], references: [cod_avaliacao])
+  fkUsuarioCpf   String
+  fkAvaliacaoCod Int
+  usuario        Usuario @relation(fields: [fkUsuarioCpf], references: [cpf])
+  avaliacao      AvaliacaoEmprestimo @relation(fields: [fkAvaliacaoCod], references: [codAvaliacao])
 
-  @@id([fk_usuario_cpf, fk_avaliacao_cod])
+  @@id([fkUsuarioCpf, fkAvaliacaoCod])
 }

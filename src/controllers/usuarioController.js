@@ -24,6 +24,7 @@ const registerUser = async (req, res) => {
     });
     res.status(201).json(user);
   } catch (error) {
+    console.error('User registration failed:', error);
     res.status(400).json({ error: 'User registration failed' });
   }
 };
@@ -44,6 +45,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ cpf: user.cpf }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
+    console.error('Login failed:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 };
