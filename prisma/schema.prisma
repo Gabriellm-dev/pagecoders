@@ -7,66 +7,66 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Usuario {
+model User {
   cpf              String   @id
   email            String   @unique
-  senha            String
-  dataCadastro     DateTime @default(now())
-  nome             String
-  rua              String?
-  numero           Int?
-  bairro           String?
-  cidade           String?
-  estado           String?
-  cep              String?
-  livros           Livro[]
-  emprestimos      Emprestimo[]
-  classificacoes   ClassificacaoUsuario[]
+  password         String
+  registrationDate DateTime @default(now())
+  name             String
+  street           String?
+  number           Int?
+  neighborhood     String?
+  city             String?
+  state            String?
+  zip              String?
+  books            Book[]
+  loans            Loan[]
+  userRatings      UserRating[]
 }
 
-model Livro {
-  codigo            Int         @id @default(autoincrement())
-  fkUsuarioCpf      String
-  nome              String
-  editora           String?
-  dataPublicacao    DateTime?
-  numEdicao         Int?
-  autorEs           String?
-  genero            String?
-  disponivel        Boolean     @default(true)
-  usuario           Usuario     @relation(fields: [fkUsuarioCpf], references: [cpf])
-  emprestimos       Emprestimo[]
+model Book {
+  code             Int         @id @default(autoincrement())
+  userCpf          String
+  title            String
+  publisher        String?
+  publicationDate  DateTime?
+  editionNumber    Int?
+  authors          String?
+  genre            String?
+  available        Boolean     @default(true)
+  user             User        @relation(fields: [userCpf], references: [cpf])
+  loans            Loan[]
 }
 
-model Emprestimo {
-  idEmprestimo          Int       @id @default(autoincrement())
-  fkUsuarioCpf          String
-  fkLivroCodigo         Int
-  dataEmprestimo        DateTime  @default(now())
-  dataPrevistaDevolucao DateTime?
-  dataDevolucao         DateTime?
-  emprestimoAutorizado  Boolean   @default(false)
-  emprestimoSolicitado  Boolean   @default(true)
-  usuario               Usuario   @relation(fields: [fkUsuarioCpf], references: [cpf])
-  livro                 Livro     @relation(fields: [fkLivroCodigo], references: [codigo])
-  avaliacaoEmprestimos  AvaliacaoEmprestimo[]
+model Loan {
+  loanId              Int       @id @default(autoincrement())
+  userCpf             String
+  bookCode            Int
+  loanDate            DateTime  @default(now())
+  expectedReturnDate  DateTime?
+  returnDate          DateTime?
+  loanAuthorized      Boolean   @default(false)
+  loanRequested       Boolean   @default(true)
+  user                User      @relation(fields: [userCpf], references: [cpf])
+  book                Book      @relation(fields: [bookCode], references: [code])
+  loanRatings         LoanRating[]
 }
 
-model AvaliacaoEmprestimo {
-  codAvaliacao   Int     @id @default(autoincrement())
-  fkEmprestimoId Int
-  classifLivro   Int?
-  classifUsuario Int?
-  comentario     String?
-  emprestimo     Emprestimo @relation(fields: [fkEmprestimoId], references: [idEmprestimo])
-  classificacoes ClassificacaoUsuario[]
+model LoanRating {
+  ratingId       Int       @id @default(autoincrement())
+  loanId         Int
+  bookRating     Int?
+  userRating     Int?
+  comment        String?
+  loan           Loan      @relation(fields: [loanId], references: [loanId])
+  userRatings    UserRating[]
 }
 
-model ClassificacaoUsuario {
-  fkUsuarioCpf   String
-  fkAvaliacaoCod Int
-  usuario        Usuario @relation(fields: [fkUsuarioCpf], references: [cpf])
-  avaliacao      AvaliacaoEmprestimo @relation(fields: [fkAvaliacaoCod], references: [codAvaliacao])
+model UserRating {
+  userCpf        String
+  ratingId       Int
+  user           User      @relation(fields: [userCpf], references: [cpf])
+  rating         LoanRating @relation(fields: [ratingId], references: [ratingId])
 
-  @@id([fkUsuarioCpf, fkAvaliacaoCod])
+  @@id([userCpf, ratingId])
 }

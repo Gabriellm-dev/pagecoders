@@ -1,18 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const routes = require('./routes/routes');
+const authMiddleware = require('./middleware/authMiddleware');
+
 const app = express();
-const usuarioRoutes = require('./routes/usuarioRoutes');
-const livroRoutes = require('./routes/livroRoutes');
-const emprestimoRoutes = require('./routes/emprestimoRoutes');
-const dotenv = require('dotenv');
+const port = process.env.PORT || 3000;
 
-dotenv.config();
 
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.use('/auth', usuarioRoutes);
-app.use('/livros', livroRoutes);
-app.use('/emprestimos', emprestimoRoutes);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.use('/api', authMiddleware, routes);
+
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

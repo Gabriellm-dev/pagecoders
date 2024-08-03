@@ -1,26 +1,28 @@
 const jwt = require('jsonwebtoken');
+const prisma = require('../prismaClient');
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  console.log('Authorization Header:', authHeader);
+const authMiddleware = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
 
-  if (!authHeader) {
-    return res.sendStatus(401);
-  }
-
-  const token = authHeader.split(' ')[1];
   if (!token) {
-    return res.sendStatus(401);
+    return res.status(401).json({ error: 'Token não fornecido' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log('Token verification failed:', err);
-      return res.sendStatus(403);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await prisma.user.findUnique({
+      where: { cpf: decoded.cpf }
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Usuário não encontrado' });
     }
+
     req.user = user;
     next();
-  });
+  } catch (error) {
+    res.status(401).json({ error: 'Token inválido' });
+  }
 };
 
-module.exports = authenticateToken;
+module.exports = authMiddleware;
