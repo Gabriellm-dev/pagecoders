@@ -56,62 +56,62 @@ Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder
 #### 1. Registro de Fulano
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/auth/register`
+- **URL**: `http://localhost:3000/api/auth/register`
 - **Body**: JSON
 
 ```json
 {
   "cpf": "12345678955",
   "email": "fulano@gmail.com",
-  "senha": "senha123456",
-  "nome": "Fulano",
-  "rua": "Avenida Getúlio Vargas",
-  "numero": 159,
-  "bairro": "Vila Rubim",
-  "cidade": "Vitória",
-  "estado": "ES",
-  "cep": "29025-230"
+  "password": "senha123456",
+  "name": "Fulano",
+  "street": "Avenida Getúlio Vargas",
+  "number": 159,
+  "neighborhood": "Vila Rubim",
+  "city": "Vitória",
+  "state": "ES",
+  "zip": "29025-230"
 }
 ```
 
 #### 2. Registro de Ciclano
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/auth/register`
+- **URL**: `http://localhost:3000/api/auth/register`
 - **Body**: JSON
 
 ```json
 {
   "cpf": "12345678900",
   "email": "ciclano@gmail.com",
-  "senha": "abc123456",
-  "nome": "Ciclano",
-  "rua": "Escadaria Manjoli Antônio de Barros ",
-  "numero": 170,
-  "bairro": "São Benedito",
-  "cidade": "Vitória",
-  "estado": "ES",
-  "cep": "29047-839"
+  "password": "abc123456",
+  "name": "Ciclano",
+  "street": "Escadaria Manjoli Antônio de Barros ",
+  "number": 170,
+  "neighborhood": "São Benedito",
+  "city": "Vitória",
+  "state": "ES",
+  "zip": "29047-839"
 }
 ```
 
 #### 3. Login de Usuário Fulano (Vai gerar um TOKEN, copie para utilizar os outros ENDPOINTS)
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/auth/login`
+- **URL**: `http://localhost:3000/api/auth/login`
 - **Body**: JSON
 
 ```json
 {
   "email": "fulano@gmail.com",
-  "senha": "senha123456"
+  "password": "senha123456"
 }
 ```
 
 #### 4. Registro de Livro de Fulano
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/books`
+- **URL**: `http://localhost:3000/api/books`
 - **Headers**: Authorization: `Bearer <token>`
 - **Body**: JSON
 
@@ -130,26 +130,26 @@ Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder
 #### 5. Login de Usuário Ciclano (Vai gerar um TOKEN, copie para utilizar os outros ENDPOINTS)
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/auth/login`
+- **URL**: `http://localhost:3000/api/auth/login`
 - **Body**: JSON
 
 ```json
 {
   "email": "ciclano@gmail.com",
-  "senha": "abc123456"
+  "password": "abc123456"
 }
 ```
 
 #### 6. Listagem de Livros (Ciclano visualiza um livro disponível e quer pegar emprestado)
 
 - **Método**: GET
-- **URL**: `http://localhost:3000/books`
+- **URL**: `http://localhost:3000/api/books`
 - **Headers**: Authorization: `Bearer <token>`
 
 #### 7. Solicitação de Empréstimo (Ciclano solicita o empréstimo do livro para Fulano)
 
 - **Método**: POST
-- **URL**: `http://localhost:3000/loans`
+- **URL**: `http://localhost:3000/api/loans`
 - **Headers**: Authorization: `Bearer <token>`
 - **Body**: JSON
 
