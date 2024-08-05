@@ -51,7 +51,7 @@ O servidor estará rodando em `http://localhost:3000`.
 
 Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder Client. Abaixo estão exemplos de requisições para cada endpoint.
 
-### Endpoints
+### Endpoints (Exemplo de simulação de uso)
 
 #### 1. Registro de Fulano
 
@@ -155,8 +155,8 @@ Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder
 
 ```json
 {
-  "userCpf": "12345678900",
-  "bookCode": 1
+  "fkBookCode": 1,
+  "expectedReturnDate": "2024-08-10T00:00:00Z"
 }
 ```
 
@@ -166,13 +166,13 @@ Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder
 - **URL**: `http://localhost:3000/loans`
 - **Headers**: Authorization: `Bearer <token>`
 
-#### 9. Autorização de Empréstimo (Fulano autoriza o empréstimo do livro para Ciclano)
+#### 9. Autorização de Empréstimo (Fulano autoriza o empréstimo do livro para Ciclano - TROQUE :loandId pelo numero correspondente)
 
 - **Método**: PUT
 - **URL****: `http://localhost:3000/loans/authorize/:loanId`
 - **Headers**: Authorization: `Bearer <token>`
 
-#### 10. Devolução de Livro (Ciclano devolve o livro para Fulano)
+#### 10. Devolução de Livro (Fulano confirma a devolução do livro)
 
 - **Método**: PUT
 - **URL**: `http://localhost:3000/loans/return/:loanId`
@@ -187,57 +187,14 @@ Você pode testar a API utilizando ferramentas como Postman, Insomnia ou Thunder
 
 ```json
 {
-  "loanId": 1,
+  "fkLoanId": 1,
   "bookRating": 5,
-  "userRating": 5,
-  "comment": "Great book!"
-}
-```
-
-#### 12. Registro de Classificação (Ciclano faz a avaliação da classificação)
-
-- **Método**: POST
-- **URL**: `http://localhost:3000/ratings`
-- **Headers**: Authorization: `Bearer <token>`
-- **Body**: JSON
-
-```json
-{
-  "loanId": 1,
-  "bookRating": 5,
-  "userRating": 5,
-  "comment": "Great book!"
-}
-```
-
-#### 13. Atualização de Classificação
-
-- **Método**: PUT
-- **URL**: `http://localhost:3000/ratings/:ratingId`
-- **Headers**: Authorization: `Bearer <token>`
-- **Body**: JSON
-
-```json
-{
-  "bookRating": 4,
   "userRating": 4,
-  "comment": "Good book!"
+  "comment": "Excelente empréstimo!"
 }
 ```
 
-#### 14. Exclusão de Classificação
-
-- **Método**: DELETE
-- **URL**: `http://localhost:3000/ratings/:ratingId`
-- **Headers**: Authorization: `Bearer <token>`
-
-#### 15. Listagem de Classificações
-
-- **Método**: GET
-- **URL**: `http://localhost:3000/ratings`
-- **Headers**: Authorization: `Bearer <token>`
-
----
+#### ENDPOINTS VARIADOS
 
 ### Observação
 
