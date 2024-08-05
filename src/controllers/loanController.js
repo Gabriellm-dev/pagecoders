@@ -1,12 +1,19 @@
 const prisma = require('../prismaClient');
 
-// Solicitando um empréstimo de livro
+// Solicita um empréstimo de livro
 const requestLoan = async (req, res) => {
-  const { fkBookCode, expectedReturnDate } = req.body;
+  let { fkBookCode, expectedReturnDate } = req.body;
   const { cpf } = req.user;
 
-  if (typeof fkBookCode !== 'number' || isNaN(fkBookCode)) {
+  fkBookCode = Number(fkBookCode);
+  expectedReturnDate = new Date(expectedReturnDate);
+
+  if (isNaN(fkBookCode)) {
     return res.status(400).json({ error: 'Código do livro inválido' });
+  }
+
+  if (isNaN(expectedReturnDate.getTime())) {
+    return res.status(400).json({ error: 'Data de devolução inválida' });
   }
 
   try {
@@ -26,7 +33,7 @@ const requestLoan = async (req, res) => {
       data: {
         userCpf: cpf,
         bookCode: fkBookCode,
-        expectedReturnDate: new Date(expectedReturnDate),
+        expectedReturnDate,
         loanAuthorized: false,
         loanRequested: true
       },
@@ -99,8 +106,8 @@ const returnBook = async (req, res) => {
       return res.status(404).json({ error: 'Empréstimo não encontrado' });
     }
 
-    if (loan.book.userCpf !== req.user.cpf) {
-      return res.status(403).json({ error: 'Somente o proprietário do livro pode confirmar a devolução' });
+    if (loan.userCpf !== req.user.cpf) {
+      return res.status(403).json({ error: 'Somente quem pegou o livro emprestado pode devolvê-lo' });
     }
 
     if (!loan.loanAuthorized) {
@@ -127,31 +134,9 @@ const returnBook = async (req, res) => {
   }
 };
 
-// Avaliar um empréstimo
-const rateLoan = async (req, res) => {
-  const { loanId } = req.params;
-  const { bookRating, userRating, comment } = req.body;
-
-  try {
-    const rating = await prisma.loanRating.create({
-      data: {
-        loanId: parseInt(loanId),
-        bookRating,
-        userRating,
-        comment
-      },
-    });
-    res.status(201).json(rating);
-  } catch (error) {
-    console.error('Erro ao avaliar o empréstimo:', error);
-    res.status(500).json({ error: 'Falha ao avaliar o empréstimo' });
-  }
-};
-
 module.exports = {
   requestLoan,
   listLoans,
   authorizeLoan,
   returnBook,
-  rateLoan,
 };

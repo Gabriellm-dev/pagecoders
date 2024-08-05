@@ -9,10 +9,9 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-
-app.use('/api', authMiddleware, routes);
-
+app.use('/api/auth', routes.authRoutes);
+app.use('/api', authMiddleware, routes.apiRoutes);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Servidor rodando na porta ${port}`);
 });
