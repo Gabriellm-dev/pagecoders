@@ -10,6 +10,7 @@ const register = async (req, res) => {
   }
 
   try {
+    const parsedNumber = number ? parseInt(number, 10) : null;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
