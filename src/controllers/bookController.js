@@ -44,8 +44,23 @@ const updateBook = async (req, res) => {
 // Listando Livros
 const listBooks = async (req, res) => {
   try {
-    const books = await prisma.book.findMany();
-    res.json(books);
+    const books = await prisma.book.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Formatar os dados para incluir o nome do usuário
+    const booksWithOwner = books.map(book => ({
+      ...book,
+      ownerName: book.user.name,
+    }));
+
+    res.json(booksWithOwner);
   } catch (error) {
     console.error('Erro ao listar livros:', error);
     res.status(500).json({ error: 'Falha ao listar livros' });
