@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Controladores
 const userController = require('../controllers/userController');
@@ -14,8 +15,10 @@ authRoutes.post('/register', authController.register);
 authRoutes.post('/login', authController.loginUser);
 
 // Rotas protegidas
-// Rotas de usuário
 const apiRoutes = express.Router();
+apiRoutes.use(authMiddleware);
+
+// Rotas de usuário
 apiRoutes.post('/users', userController.registerUser);
 apiRoutes.put('/users/:cpf', userController.updateUser);
 apiRoutes.get('/users', userController.listUsers);
@@ -27,7 +30,6 @@ apiRoutes.put('/books/:code', bookController.updateBook);
 apiRoutes.delete('/books/:code', bookController.deleteBook);
 apiRoutes.get('/books', bookController.listBooks);
 apiRoutes.get('/books/available', bookController.listAvailableBooks);
-
 
 // Rotas de empréstimo
 apiRoutes.post('/loans', loanController.requestLoan);

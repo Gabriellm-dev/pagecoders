@@ -6,12 +6,12 @@ const requestLoan = async (req, res) => {
   const { cpf } = req.user;
 
   fkBookCode = Number(fkBookCode);
-  expectedReturnDate = new Date(expectedReturnDate);
 
   if (isNaN(fkBookCode)) {
     return res.status(400).json({ error: 'Código do livro inválido' });
   }
 
+  expectedReturnDate = new Date(expectedReturnDate);
   if (isNaN(expectedReturnDate.getTime())) {
     return res.status(400).json({ error: 'Data de devolução inválida' });
   }
@@ -46,6 +46,7 @@ const requestLoan = async (req, res) => {
   }
 };
 
+
 // Lista os empréstimos com detalhes
 const listLoans = async (req, res) => {
   try {
@@ -65,6 +66,10 @@ const listLoans = async (req, res) => {
 // Autoriza um empréstimo
 const authorizeLoan = async (req, res) => {
   const { loanId } = req.params;
+
+  if (isNaN(parseInt(loanId))) {
+    return res.status(400).json({ error: 'ID de empréstimo inválido' });
+  }
 
   try {
     const loan = await prisma.loan.findUnique({
@@ -95,6 +100,10 @@ const authorizeLoan = async (req, res) => {
 // Devolver um livro para o seu dono
 const returnBook = async (req, res) => {
   const { loanId } = req.params;
+
+  if (isNaN(parseInt(loanId))) {
+    return res.status(400).json({ error: 'ID de empréstimo inválido' });
+  }
 
   try {
     const loan = await prisma.loan.findUnique({
