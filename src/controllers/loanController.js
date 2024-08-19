@@ -2,7 +2,7 @@ const prisma = require('../prismaClient');
 
 // Solicita um empréstimo de livro
 const requestLoan = async (req, res) => {
-  let { fkBookCode, expectedReturnDate } = req.body;
+  let { bookCode: fkBookCode, expectedReturnDate } = req.body;
   const { cpf } = req.user;
 
   fkBookCode = Number(fkBookCode);

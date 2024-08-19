@@ -26,6 +26,8 @@ apiRoutes.post('/books', bookController.registerBook);
 apiRoutes.put('/books/:code', bookController.updateBook);
 apiRoutes.delete('/books/:code', bookController.deleteBook);
 apiRoutes.get('/books', bookController.listBooks);
+apiRoutes.get('/books/available', bookController.listAvailableBooks);
+
 
 // Rotas de empréstimo
 apiRoutes.post('/loans', loanController.requestLoan);

@@ -80,9 +80,22 @@ const deleteBook = async (req, res) => {
   }
 };
 
+const listAvailableBooks = async (req, res) => {
+  try {
+    const availableBooks = await prisma.book.findMany({
+      where: { available: true }
+    });
+    res.json(availableBooks);
+  } catch (error) {
+    console.error('Erro ao listar livros disponíveis:', error);
+    res.status(500).json({ error: 'Falha ao listar livros disponíveis' });
+  }
+};
+
 module.exports = {
   registerBook,
   updateBook,
   listBooks,
   deleteBook,
+  listAvailableBooks,
 };
